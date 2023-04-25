@@ -57,7 +57,7 @@ source=("git+https://git.savannah.gnu.org/git/grub.git#commit=${_commit}"
         'git+https://git.savannah.gnu.org/git/gnulib.git'
         "https://ftp.gnu.org/gnu/unifont/unifont-${_unifont_ver}/unifont-${_unifont_ver}.bdf.gz"
         '0001-00_header-add-GRUB_COLOR_-variables.patch'
-        '0002-10_linux-detect-archlinux-initramfs.patch'
+        '10_linux.in'
         'grub.default'
         'sbat.csv')
 
@@ -65,7 +65,7 @@ sha256sums=('SKIP'
             'SKIP'
             '1fddba900a36b8a067bf2177b05c4a2482a0f7ca1545cf531c03509f47ce1590'
             '5dee6628c48eef79812bb9e86ee772068d85e7fcebbd2b2b8d1e19d24eda9dab'
-            '8488aec30a93e8fe66c23ef8c23aefda39c38389530e9e73ba3fbcc8315d244d'
+            '43296451e9e77a3279134af1783fdb0da1f425acfd350b15f9d74f03363ce468'
             'cf75ac04ab8fc2e875b543dc80b9e379dcc6aa86d2ab1e499741cb571e2d20c0'
             '98b23d41e223bdc0a6e20bdcb3aa77e642f29b64081b1fd2f575314172fc89df')
 
@@ -119,17 +119,11 @@ prepare() {
 	## Based on http://lists.gnu.org/archive/html/grub-devel/2012-02/msg00021.html
 	patch -Np1 -i "${srcdir}/0001-00_header-add-GRUB_COLOR_-variables.patch"
 
-	echo "Patch to detect of Arch Linux initramfs images by grub-mkconfig..."
-	patch -Np1 -i "${srcdir}/0002-10_linux-detect-archlinux-initramfs.patch"
-
 	echo "Fix DejaVuSans.ttf location so that grub-mkfont can create *.pf2 files for starfield theme..."
 	sed 's|/usr/share/fonts/dejavu|/usr/share/fonts/dejavu /usr/share/fonts/TTF|g' -i "configure.ac"
 
-	echo "Fix mkinitcpio 'rw' FS#36275..."
-	sed 's| ro | rw |g' -i "util/grub.d/10_linux.in"
-
-	echo "Fix OS naming..."
-	sed 's|${GRUB_DISTRIBUTOR} Linux|${GRUB_DISTRIBUTOR}|' -i "util/grub.d/10_linux.in"
+    echo "Use custom 10_linux.in..."
+    cp "../10_linux.in" "util/grub.d/10_linux.in"
 
 	echo "Pull in latest language files..."
 	./linguas.sh
