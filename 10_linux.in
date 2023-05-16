@@ -291,9 +291,6 @@ for linux in ${reverse_sorted_list}; do
     linux_entry "${OS}" "${version}" simple \
     "${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT}"
 
-    linux_entry "${OS} - undo system changes from previous boot" "${version}" simple \
-    "${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT} abort_staging=true"
-
     submenu_indentation="$grub_tab"
 
     if [ -z "$boot_device_id" ]; then
